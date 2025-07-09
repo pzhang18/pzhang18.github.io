@@ -20,30 +20,58 @@
         align-items: center;
       }
       #gl {
-        border: 2px solid #444;
+        border: 1px solid #080606;
         background: #000;
       }
       h1 {
-        margin-bottom: 0.5em;
+        margin-bottom: 0.2em;
       }
     </style>
   </head>
   <body>
     <h1>3D Volume Viewer</h1>
     <div id="container">
-      <canvas id="gl" width="1080" height="1080"></canvas>
+      <canvas id="gl" width="640" height="480"></canvas>
     </div>
-    <script type="module">
-      import { Niivue } from "https://unpkg.com/@niivue/niivue@0.57.0/dist/index.js";
+    <script type="module" async>
+      import { Niivue, SHOW_RENDER, SLICE_TYPE } from "https://unpkg.com/@niivue/niivue@0.57.0/dist/index.js";
       // Path to your NIfTI file in the data folder
       const volumeList = [
         { url: "./data/sub-01_s_MVC_pre-g_crop_370_520_100.nii.gz" }
       ];
-      const nv = new Niivue({ isResizeCanvas: false });
+      var nv = new Niivue({ isResizeCanvas: false });
       // Attach to canvas and load the volume
-      nv.attachTo("gl").then(() => {
-        nv.loadVolumes(volumeList);
-      });
+      await nv.attachTo("gl");
+      await nv.loadVolumes(volumeList);
+      // Set to multiplanar view
+      // nv.setSliceType(nv.sliceTypeMultiplanar);
+      // Set to auto layout
+      // nv.setMultiplanarLayout(0);
+      // Always show volume render with slices
+      // nv.opts.multiplanarShowRender = SHOW_RENDER.ALWAYS;
+      // nv.opts.isColorbar = true;
+      // Enable equal size tiles
+      // nv.opts.multiplanarEqualSize = true;
+      // Set hero image fraction (0.0 to 1.0)
+      // 0.0 = no hero, 1.0 = hero takes maximum space
+      //nv.setHeroImage(0.7);
+      const renderWithAxial = [
+        // left
+        { sliceType: SLICE_TYPE.RENDER, position: [0, 0, 0.5, 1.0] },
+        // right-top
+        { sliceType: SLICE_TYPE.AXIAL, position: [0.5, 0, 0.5, 0.3] },
+        // Right-bottom-1
+        { sliceType: SLICE_TYPE.SAGITTAL, position: [0.5, 0.3, 0.25, 0.7] },
+        // Right-bottom-2
+        { sliceType: SLICE_TYPE.CORONAL, position: [0.75, 0.3, 0.25, 0.7] }
+        ];
+
+      // Apply the custom layout
+      nv.setCustomLayout(renderWithAxial);
+      nv.setClipPlane([0.35, 270, 0]);
+      nv.setClipPlaneColor([0.5, 0.5, 1, 0.5]); // [r, g, b, a]
+      // Apply changes
+      nv.drawScene();
     </script>
   </body>
 </html>

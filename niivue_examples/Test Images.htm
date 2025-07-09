@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Test Images</title>
+    <link rel="stylesheet" href="Test%20Images_files/light.css">
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >niivue doesn't work properly without JavaScript enabled. Please enable
+        it to continue.</strong
+      >
+    </noscript>
+    <header>
+      <section>
+        Formats: <label id="localimages"><button>FLAIR.nrrd</button><button>cactus.nii.gz</button><button>DoG.png</button><button>anat_final.FT+tlrc.HEAD</button><button>mha.mha</button><button>template.mif.gz</button><button>trix/fa.mif</button><button>dsistudio.src.gz</button><button>dsistudio.fib.gz</button><button>wm.mgz</button></label>
+        <p>
+        Modalities: <label id="webimages"><button>chris_MRA</button><button>chris_PD</button><button>chris_t1</button><button>chris_t2</button><button>CT_Abdo</button><button>CT_AVM</button><button>CT_Electrodes</button><button>CT_Philips</button><button>CT_pitch</button><button>fmri_pitch</button><button>Iguana</button><button>mni152</button><button>MR_Gd</button><button>pcasl</button><button>spm152</button><button>spmMotor</button><button>visiblehuman</button><button>rgb_bmp.jpg</button><button>gray_bmp.png</button><button>HCD1464653.qsdr.fz</button></label>
+      </p></section>
+    </header>
+    <main id="container" style="background-color: black;">
+      <canvas id="gl1" style="width: 100%; height: 100%; display: block;" width="1920" height="705" tabindex="0"></canvas>
+    </main>
+    <footer>
+      <label id="colormaps"><button>actc</button><button>afni_blues_inv</button><button>afni_reds_inv</button><button>batlow</button><button>bcgwhw</button><button>bcgwhw_dark</button><button>blue</button><button>blue2cyan</button><button>blue2magenta</button><button>blue2red</button><button>bluegrn</button><button>bone</button><button>bronze</button><button>cet_l17</button><button>cividis</button><button>cool</button><button>copper</button><button>copper2</button><button>ct_airways</button><button>ct_artery</button><button>ct_bones</button><button>ct_brain</button><button>ct_brain_gray</button><button>ct_cardiac</button><button>ct_head</button><button>ct_kidneys</button><button>ct_liver</button><button>ct_muscles</button><button>ct_scalp</button><button>ct_skull</button><button>ct_soft</button><button>ct_soft_tissue</button><button>ct_surface</button><button>ct_vessels</button><button>ct_w_contrast</button><button>cubehelix</button><button>electric_blue</button><button>freesurfer</button><button>ge_color</button><button>gold</button><button>gray</button><button>green</button><button>green2cyan</button><button>green2orange</button><button>hot</button><button>hotiron</button><button>hsv</button><button>inferno</button><button>jet</button><button>kry</button><button>linspecer</button><button>lipari</button><button>magma</button><button>mako</button><button>navia</button><button>nih</button><button>plasma</button><button>random</button><button>red</button><button>redyell</button><button>rocket</button><button>roi_i256</button><button>surface</button><button>thermal</button><button>turbo</button><button>violet</button><button>viridis</button><button>warm</button><button>winter</button><button>x_rain</button></label>
+    </footer>
+  
+
+<script type="module">
+  import * as niivue from "../dist/index.js";
+  
+  var volumeList1 = [
+    // first item is background image
+    {
+      url: "../images/mni152.nii.gz",
+      colormap: "gray",
+      opacity: 1,
+      visible: true,
+    },
+  ];
+  var nv1 = new niivue.Niivue({ backColor: [0.7, 0.7, 0.9, 1] });
+  await nv1.attachTo("gl1");
+  nv1.loadVolumes(volumeList1);
+  nv1.opts.isColorbar = true;
+  nv1.setSliceType(nv1.sliceTypeRender);
+  nv1.setClipPlane([0.35, 270, 0]);
+  //nv1.setSliceType(nv1.sliceTypeMultiplanar)
+  let localImgs = ['FLAIR.nrrd','cactus.nii.gz', 'DoG.png', "anat_final.FT+tlrc.HEAD", "mha.mha", "template.mif.gz", "trix/fa.mif", "dsistudio.src.gz", "dsistudio.fib.gz","wm.mgz"];
+  for (let i = 0; i < localImgs.length; i++) {
+    let btn = document.createElement("button");
+    btn.innerHTML = localImgs[i];
+    btn.onclick = function () {
+      let img = "../images/" + localImgs[i];
+      const volumeObj = { url: img };
+      // If the image ends with ".HEAD", add the detached image data URL
+      if (localImgs[i].endsWith(".HEAD")) {
+        volumeObj.urlImgData = img.replace(".HEAD", ".BRIK");
+      }
+      nv1.loadVolumes([ volumeObj ])
+    }
+    localimages.appendChild(btn);
+  }
+  let imgs = [
+    "chris_MRA",
+    "chris_PD",
+    "chris_t1",
+    "chris_t2",
+    "CT_Abdo",
+    "CT_AVM",
+    "CT_Electrodes",
+    "CT_Philips",
+    "CT_pitch",
+    "fmri_pitch",
+    "Iguana",
+    "mni152",
+    "MR_Gd",
+    "pcasl",
+    "spm152",
+    "spmMotor",
+    "visiblehuman",
+    "rgb_bmp.jpg",
+    "gray_bmp.png",
+    "HCD1464653.qsdr.fz"
+  ];
+  for (let i = 0; i < imgs.length; i++) {
+    let btn = document.createElement("button");
+    btn.innerHTML = imgs[i];
+    btn.onclick = function () {
+      let root = "https://niivue.github.io/niivue-demo-images/";
+      let img = root + imgs[i]
+      if (!img.endsWith('.png') && !img.endsWith('.jpg') && !img.endsWith('fz'))
+        img += ".nii.gz";
+      console.log("Loading: " + img);
+      volumeList1[0].url = img;
+      nv1.loadVolumes(volumeList1);
+      nv1.updateGLVolume();
+    };
+    webimages.appendChild(btn);
+  }
+  let cmaps = nv1.colormaps();
+  let cmapEl = document.getElementById("colormaps");
+  for (let i = 0; i < cmaps.length; i++) {
+    let btn = document.createElement("button");
+    btn.innerHTML = cmaps[i];
+    btn.onclick = function () {
+      nv1.setColormap(nv1.volumes[0].id, cmaps[i]);
+    };
+    cmapEl.appendChild(btn);
+  }
+</script></body></html>
