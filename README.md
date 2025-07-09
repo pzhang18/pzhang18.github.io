@@ -1,2 +1,3 @@
-# pzhang18.github.io
-3D Ultrasound Visualizer
+# NIfTI Viewer
+
+A simple web-based NIfTI file viewer using [NiiVue](https://niivue.com/)
