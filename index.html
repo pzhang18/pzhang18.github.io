@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <title>3D Volume Viewer</title>
     <style>
       body {
@@ -14,7 +15,7 @@
         font-family: sans-serif;
       }
       #container {
-        margin-top: 2em;
+        margin-top: 0.2em;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -34,8 +35,10 @@
     <div id="container">
       <canvas id="gl" width="640" height="640"></canvas>
     </div>
-    <script type="module" async>
+    <script type="module">
       import { Niivue, SHOW_RENDER, SLICE_TYPE } from "https://unpkg.com/@niivue/niivue@0.57.0/dist/index.js";
+
+      
       // Path to your NIfTI file in the data folder
       const volumeList = [
         //{ url: "./data/sub-01_s_MVC_pre-g_crop_370_520_100.nii.gz" }

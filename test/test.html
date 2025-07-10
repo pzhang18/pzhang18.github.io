@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>3D Volume Viewer</title>
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #222;
+        color: #eee;
+        font-family: sans-serif;
+      }
+      #container {
+        margin-top: 0.2em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #gl {
+        border: 1px solid #080606;
+        background: #000;
+      }
+      h1 {
+        margin-bottom: 0.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>3D Volume Viewer</h1>
+    <p> 3d reconstruction of the ultrasound scan of the bicep brachii muscle</p>
+    <div id="container">
+      <canvas id="gl" width="640" height="640"></canvas>
+    </div>
+    <script type="module">
+      import { Niivue, SHOW_RENDER, SLICE_TYPE } from "https://unpkg.com/@niivue/niivue@0.57.0/dist/index.js";
+
+      
+      // Path to your NIfTI file in the data folder
+      const volumeList = [
+        //{ url: "./data/sub-01_s_MVC_pre-g_crop_370_520_100.nii.gz" }
+        { url: "./data/New_device_test_Bicep_Crop_232_190_96.nii.gz" }
+
+      ];
+      var nv = new Niivue({ isResizeCanvas: false });
+      // Attach to canvas and load the volume
+      await nv.attachTo("gl");
+      await nv.loadVolumes(volumeList);
+      nv.setSliceType(nv.sliceTypeRender)
+      // Set to multiplanar view
+      // nv.setSliceType(nv.sliceTypeMultiplanar);
+      // Set to auto layout
+      // nv.setMultiplanarLayout(0);
+      // Always show volume render with slices
+      // nv.opts.multiplanarShowRender = SHOW_RENDER.ALWAYS;
+      // nv.opts.isColorbar = true;
+      // Enable equal size tiles
+      // nv.opts.multiplanarEqualSize = true;
+      // Set hero image fraction (0.0 to 1.0)
+      // 0.0 = no hero, 1.0 = hero takes maximum space
+      //nv.setHeroImage(0.7);
+      const renderWithAxial = [
+        // left
+        { sliceType: SLICE_TYPE.RENDER, position: [0, 0, 0.5, 1.0] },
+        // right-top
+        { sliceType: SLICE_TYPE.AXIAL, position: [0.5, 0, 0.5, 0.3] },
+        // Right-bottom-1
+        { sliceType: SLICE_TYPE.SAGITTAL, position: [0.5, 0.3, 0.25, 0.7] },
+        // Right-bottom-2
+        { sliceType: SLICE_TYPE.CORONAL, position: [0.75, 0.3, 0.25, 0.7] }
+        ];
+
+      // Apply the custom layout
+      // nv.setCustomLayout(renderWithAxial);
+      // Set clip plane
+      nv.setClipPlane([0.35, 270, 0]);
+      nv.setClipPlaneColor([0.5, 0.5, 1, 0.5]); // [r, g, b, a]
+      // Apply changes
+      nv.drawScene();
+    </script>
+    <p> Volume size: 60 x 65 x 180 mm </p>
+    <p> Acquired with 3d ultrasound scanner and a linear Telemed ultrasound transducer. </p>
+  </body>
+</html>
